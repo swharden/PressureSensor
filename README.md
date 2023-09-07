@@ -1,2 +1,3 @@
-# PressureSensor
-Minimal complexity standalone digital pressure sensor
+# Pressure Sensor
+
+This project contains design files for a minimal complexity digital pressure sensor.

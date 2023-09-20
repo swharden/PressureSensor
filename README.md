@@ -17,3 +17,5 @@ This project contains design files for a minimal complexity digital pressure sen
 * Add ground plate easy to clip with a scope probe
 * Break out test pad
 * Add current limit resistors for each segment
+* Use a SMT zero button
+* Consider adding more LEDs (power? dP/dt?)

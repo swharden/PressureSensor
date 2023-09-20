@@ -3,8 +3,9 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
-volatile uint8_t next_digit;
-volatile uint8_t digit_1;
+volatile uint8_t digit_index;
+volatile uint8_t digit1_is_negative = 0;
+//volatile uint8_t digit_1;
 volatile uint8_t digit_2;
 volatile uint8_t digit_3;
 volatile uint8_t digit_4;
@@ -144,6 +145,15 @@ void segments_set_9(){
 	segment_set_G();
 }
 
+void segments_set_blank(){
+	segments_clear();
+}
+
+void segments_set_negative(){
+	segments_clear();
+	segment_set_G();
+}
+
 void segments_set(char value){
 	if (value == 0){
 		segments_set_0();
@@ -168,19 +178,35 @@ void segments_set(char value){
 	}
 }
 
-void digit_set(char digit){
+void display_digit(char digit){
+	
 	if (digit == 0){
+		uint8_t display_value_is_not_zero = digit_2 | digit_3 | digit_4;
 		PORTC.OUT = ~PIN0_bm;
-		segments_set(digit_1);
-		} else if (digit == 1){
+		if (digit1_is_negative && display_value_is_not_zero){
+			segments_set_negative();
+			} else {
+			segments_set_blank();
+		}
+		return;
+	}
+	
+	if (digit == 1){
 		PORTC.OUT = ~PIN1_bm;
 		segments_set(digit_2);
-		} else if (digit == 2){
+		return;
+	}
+	
+	if (digit == 2){
 		PORTC.OUT = ~PIN2_bm;
 		segments_set(digit_3);
-		} else if (digit == 3){
+		return;
+	}
+	
+	if (digit == 3){
 		PORTC.OUT = ~PIN3_bm;
 		segments_set(digit_4);
+		return;
 	}
 }
 
@@ -196,8 +222,7 @@ void display_number(uint16_t number){
 	digit_3 = number % 10;
 	number /= 10;
 	digit_2 = number % 10;
-	number /= 10;
-	digit_1 = number % 10;
+	// digit_1 is reserved for minus sign
 }
 
 void setup_button(){
@@ -221,36 +246,93 @@ uint8_t is_button_up(){
 	}
 }
 
+void setup_spi(){
+	PORTA.DIRCLR = PIN5_bm; // MISO
+	PORTA.OUTCLR = PIN5_bm;
+	PORTA.DIRSET = PIN6_bm; // SCK
+}
+
+void spi_pulse_clock(){
+	PORTA.OUTSET = PIN6_bm;
+	PORTA.OUTCLR = PIN6_bm;
+}
+
+uint64_t readHX() {
+
+	// wait for the reading to finish
+	while (PORTA.IN & PIN5_bm) {}
+
+	// read the 24-bit pressure
+	uint64_t result = 0;
+	for (int i=0; i<24; i++){
+		spi_pulse_clock(1);
+		result = result << 1;
+		if((PORTA.IN & PIN5_bm)) {
+			result++;
+		}
+	}
+
+	// take 2's compliment
+	result=result ^ 0x800000;
+	
+	// pulse 3 times to start a 40 Hz pressure reading
+	spi_pulse_clock();
+	spi_pulse_clock();
+	spi_pulse_clock();
+	
+	return result;
+}
+
+volatile uint64_t pressure_baseline = 0;
+
+void pressure_reset(){
+	led_on();
+	for (int i=0; i<5; i++){
+		pressure_baseline = readHX();
+	}
+	led_off();
+}
+
 int main(void)
 {
 	setup_led();
 	setup_display();
 	setup_timer();
 	setup_button();
+	setup_spi();
 	sei();
 	
-	uint16_t count = 0;
+	pressure_reset();
+	
 	while (1)
 	{
-		_delay_ms(100);
-		display_number(count++);
+		uint64_t pressure_raw = readHX();
+		uint64_t pressure_disp = 0;
+		if (pressure_raw >= pressure_baseline){
+			pressure_disp = pressure_raw - pressure_baseline;
+			digit1_is_negative = 0;
+			} else {
+			pressure_disp = pressure_baseline - pressure_raw;
+			digit1_is_negative = 1;
+		}
+		display_number(pressure_disp / 10000);
+		
+		// TODO: long press changes sensitivity.
 		
 		if (is_button_down()){
-			count = 0;
-			display_number(0);
-			led_on();
-			while (is_button_down());
-			led_off();
+			while (is_button_down()){
+				pressure_reset();
+			}
 		}
 	}
 }
 
 ISR(TCB0_INT_vect)
 {
-	digit_set(next_digit);
-	next_digit++;
-	if (next_digit > 3){
-		next_digit = 0;
+	display_digit(digit_index);
+	digit_index++;
+	if (digit_index > 3){
+		digit_index = 0;
 	}
 	
 	TCB0.INTFLAGS = TCB_OVF_bm | TCB_CAPT_bm;

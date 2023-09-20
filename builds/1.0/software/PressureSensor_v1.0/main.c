@@ -306,6 +306,9 @@ int main(void)
 	
 	while (1)
 	{
+		// TODO: Avoid flickering by not updating the display
+		// if the new reading is the same as 2 readings ago.
+
 		uint64_t pressure_raw = readHX();
 		uint64_t pressure_disp = 0;
 		if (pressure_raw >= pressure_baseline){

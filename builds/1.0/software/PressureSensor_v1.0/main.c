@@ -11,6 +11,7 @@ volatile uint8_t digit_4;
 
 void setup_led(){
 	PORTF.DIRSET = PIN4_bm;
+	PORTF.OUTSET = PIN4_bm;
 }
 
 void led_on() {
@@ -237,7 +238,9 @@ int main(void)
 		if (is_button_down()){
 			count = 0;
 			display_number(0);
+			led_on();
 			while (is_button_down());
+			led_off();
 		}
 	}
 }

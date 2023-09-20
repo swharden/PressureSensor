@@ -14,4 +14,6 @@ This project contains design files for a minimal complexity digital pressure sen
 
 **Notes for future builds:**
 * Use a USBC connector
-* Add test pads for ground
+* Add ground plate easy to clip with a scope probe
+* Break out test pad
+* Add current limit resistors for each segment

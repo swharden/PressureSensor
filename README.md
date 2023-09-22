@@ -12,10 +12,20 @@ This project contains design files for a minimal complexity digital pressure sen
 
 ![](builds/1.0/photo1.png)
 
-**Notes for future builds:**
+### Version 2.0
+
+In development...
+
+### Components
+* [tinted window film](https://www.amazon.com/dp/B07FBZ7NML/)
+
+### Notes for Future Builds
 * Use a USBC connector
-* Add ground plate easy to clip with a scope probe
-* Break out test pad
+* Add test pads for GND and DAC
 * Add current limit resistors for each segment
 * Use a SMT zero button
-* Consider adding more LEDs (power? dP/dt?)
+* Use a separate mode button
+* Add more LEDs: power, dV, status
+* Green LEDs need >47Ω to look nice
+* Use rounded edges
+* Drill holes not necessary

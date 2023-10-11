@@ -13,3 +13,9 @@ This project contains design files for a minimal complexity digital pressure sen
 ![](builds/2.0/pcb.png)
 
 ![](builds/2.0/3d.png)
+
+#### Build Notes
+
+* Through-hole buttons have leads out the bottom which fight against adhesive pads at the corners
+* PCB near display could be notched to facilitate string or zip tie mounting vertically
+* I'm unsure whether I like the USB connector on the bottom. The whole board could be turned upside down with the connector and buttons on the top.

@@ -5,6 +5,9 @@ class PressureSensor{
 	public:
 	
 	PressureSensor(){
+	}
+	
+	void setup(){
 		PORTA.DIRCLR = PIN5_bm; // MISO
 		PORTA.OUTCLR = PIN5_bm;
 		PORTA.DIRSET = PIN6_bm; // SCK

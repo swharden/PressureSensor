@@ -4,7 +4,6 @@
 class DisplayManager{
 	public:
 	DisplayManager(){
-		setup();
 	}
 	
 	void setup(){
@@ -57,12 +56,24 @@ class DisplayManager{
 	volatile uint8_t digit_3;
 	volatile uint8_t digit_4;
 	
+	/*
+	// standard orientation
 	void segment_set_A() { PORTD.OUTSET = PIN1_bm; }
 	void segment_set_B() { PORTD.OUTSET = PIN2_bm; }
 	void segment_set_C() { PORTD.OUTSET = PIN3_bm; }
 	void segment_set_D() { PORTD.OUTSET = PIN4_bm; }
 	void segment_set_E() { PORTD.OUTSET = PIN5_bm; }
 	void segment_set_F() { PORTF.OUTSET = PIN2_bm; }
+	void segment_set_G() { PORTF.OUTSET = PIN3_bm; }
+	*/
+	
+	// vertically inverted orientation
+	void segment_set_D() { PORTD.OUTSET = PIN1_bm; }
+	void segment_set_E() { PORTD.OUTSET = PIN2_bm; }
+	void segment_set_F() { PORTD.OUTSET = PIN3_bm; }
+	void segment_set_A() { PORTD.OUTSET = PIN4_bm; }
+	void segment_set_B() { PORTD.OUTSET = PIN5_bm; }
+	void segment_set_C() { PORTF.OUTSET = PIN2_bm; }
 	void segment_set_G() { PORTF.OUTSET = PIN3_bm; }
 
 	void segments_clear() {
@@ -197,11 +208,25 @@ class DisplayManager{
 		}
 	}
 
+/*
+	// standard orientation
+	void set_digit_1() { PORTC.OUT = ~PIN0_bm; }
+	void set_digit_2() { PORTC.OUT = ~PIN1_bm; }
+	void set_digit_3() { PORTC.OUT = ~PIN2_bm; }
+	void set_digit_4() { PORTC.OUT = ~PIN3_bm; }
+*/
+
+	// vertically inverted orientation
+	void set_digit_4() { PORTC.OUT = ~PIN0_bm; }
+	void set_digit_3() { PORTC.OUT = ~PIN1_bm; }
+	void set_digit_2() { PORTC.OUT = ~PIN2_bm; }
+	void set_digit_1() { PORTC.OUT = ~PIN3_bm; }
+
 	void display_digit(char digit){
 		
 		if (digit == 0){
 			uint8_t display_value_is_not_zero = digit_2 | digit_3 | digit_4;
-			PORTC.OUT = ~PIN0_bm;
+			set_digit_1();
 			if (digit1_is_negative && display_value_is_not_zero){
 				segments_set_negative();
 				} else {
@@ -211,19 +236,19 @@ class DisplayManager{
 		}
 		
 		if (digit == 1){
-			PORTC.OUT = ~PIN1_bm;
+			set_digit_2();
 			segments_set(digit_2);
 			return;
 		}
 		
 		if (digit == 2){
-			PORTC.OUT = ~PIN2_bm;
+			set_digit_3();
 			segments_set(digit_3);
 			return;
 		}
 		
 		if (digit == 3){
-			PORTC.OUT = ~PIN3_bm;
+			set_digit_4();
 			segments_set(digit_4);
 			return;
 		}

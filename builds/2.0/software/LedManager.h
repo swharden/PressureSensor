@@ -26,6 +26,10 @@ class LedManager{
 		PORTA.OUTSET = PIN4_bm;
 	}
 
+	void sample_toggle(){
+		PORTA.OUTTGL = PIN4_bm;
+	}
+
 	void mode_on(){
 		PORTA.OUTCLR = PIN3_bm;
 	}

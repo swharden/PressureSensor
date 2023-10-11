@@ -46,6 +46,7 @@ int main(void)
 	while(1){
 		
 		// TODO: put this logic in the sensor manager
+		//leds.sample_toggle(); // NOTE: this is highly distracting if it's bright green
 		int32_t sensor_value_raw = sensor.Read();
 		int32_t sensor_value_centered = sensor_value_raw - zero_value;
 		int16_t display_value = sensor_value_centered / 10000;

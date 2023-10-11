@@ -56,7 +56,6 @@ class DisplayManager{
 	volatile uint8_t digit_3;
 	volatile uint8_t digit_4;
 	
-	/*
 	// standard orientation
 	void segment_set_A() { PORTD.OUTSET = PIN1_bm; }
 	void segment_set_B() { PORTD.OUTSET = PIN2_bm; }
@@ -65,8 +64,8 @@ class DisplayManager{
 	void segment_set_E() { PORTD.OUTSET = PIN5_bm; }
 	void segment_set_F() { PORTF.OUTSET = PIN2_bm; }
 	void segment_set_G() { PORTF.OUTSET = PIN3_bm; }
-	*/
 	
+	/*
 	// vertically inverted orientation
 	void segment_set_D() { PORTD.OUTSET = PIN1_bm; }
 	void segment_set_E() { PORTD.OUTSET = PIN2_bm; }
@@ -75,6 +74,7 @@ class DisplayManager{
 	void segment_set_B() { PORTD.OUTSET = PIN5_bm; }
 	void segment_set_C() { PORTF.OUTSET = PIN2_bm; }
 	void segment_set_G() { PORTF.OUTSET = PIN3_bm; }
+	*/
 
 	void segments_clear() {
 		PORTD.OUTCLR = PIN1_bm;
@@ -208,19 +208,19 @@ class DisplayManager{
 		}
 	}
 
-/*
 	// standard orientation
 	void set_digit_1() { PORTC.OUT = ~PIN0_bm; }
 	void set_digit_2() { PORTC.OUT = ~PIN1_bm; }
 	void set_digit_3() { PORTC.OUT = ~PIN2_bm; }
 	void set_digit_4() { PORTC.OUT = ~PIN3_bm; }
-*/
 
+/*
 	// vertically inverted orientation
 	void set_digit_4() { PORTC.OUT = ~PIN0_bm; }
 	void set_digit_3() { PORTC.OUT = ~PIN1_bm; }
 	void set_digit_2() { PORTC.OUT = ~PIN2_bm; }
 	void set_digit_1() { PORTC.OUT = ~PIN3_bm; }
+	*/
 
 	void display_digit(char digit){
 		
